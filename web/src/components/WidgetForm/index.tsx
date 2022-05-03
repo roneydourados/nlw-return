@@ -73,9 +73,9 @@ export function WidgetForm() {
         </>
       )}
       <footer className="text-xs text-neutral-400">
-        Feito com carinho por{" "}
+        Feito com ♥ pela
         <a
-          className="underline underline-offset-2"
+          className="underline underline-offset-2 ml-1"
           href="https://app.yenor-tec.com/"
         >
           Yenor Tec

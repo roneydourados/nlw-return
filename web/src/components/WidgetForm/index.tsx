@@ -4,6 +4,7 @@ import thoughtImageUrl from "../../assets/images/thought.svg";
 import { useCallback, useState } from "react";
 import { FeedbackTypeStep } from "./Steps/FeedbackTypeStep";
 import { FeedbackContentStep } from "./Steps/FeedbackContentStep";
+import { FeedbackSuccessStep } from "./Steps/FeedbackSuccessStep";
 
 export const feedbackTypes = {
   BUG: {
@@ -35,8 +36,10 @@ export type FeedbackType = keyof typeof feedbackTypes;
 
 export function WidgetForm() {
   const [feedBackType, setFeedbackType] = useState<FeedbackType | null>(null);
+  const [feedbackSent, setFeedbackSent] = useState(false);
 
   const handleRestartFeedback = useCallback(() => {
+    setFeedbackSent(false);
     setFeedbackType(null);
   }, []);
 
@@ -54,15 +57,21 @@ export function WidgetForm() {
       md:w-auto
       "
     >
-      {!feedBackType ? (
-        <FeedbackTypeStep onFeedbackTypeChanged={setFeedbackType} />
+      {feedbackSent ? (
+        <FeedbackSuccessStep onFeedbackRestartRequest={handleRestartFeedback} />
       ) : (
-        <FeedbackContentStep
-          feedbackType={feedBackType}
-          feedbackContentStepGoBack={handleRestartFeedback}
-        />
+        <>
+          {!feedBackType ? (
+            <FeedbackTypeStep onFeedbackTypeChanged={setFeedbackType} />
+          ) : (
+            <FeedbackContentStep
+              feedbackType={feedBackType}
+              feedbackContentStepGoBack={handleRestartFeedback}
+              onFeedbackSent={() => setFeedbackSent(true)}
+            />
+          )}
+        </>
       )}
-
       <footer className="text-xs text-neutral-400">
         Feito com carinho por{" "}
         <a

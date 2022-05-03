@@ -1,17 +1,49 @@
 import { ArrowLeft } from "phosphor-react";
+import { useCallback, useState } from "react";
 import { FeedbackType, feedbackTypes } from "..";
 import { CloseButton } from "../../CloseButton";
+import { ScreenShotButton } from "../ScreenShotButton";
+import { useForm } from "react-hook-form";
 
 interface FeedbackContentStepProp {
   feedbackType: FeedbackType;
   feedbackContentStepGoBack: () => void;
+  onFeedbackSent: () => void;
+}
+
+interface FeedbackInput {
+  feedback: string;
 }
 
 export function FeedbackContentStep({
   feedbackType,
   feedbackContentStepGoBack,
+  onFeedbackSent,
 }: FeedbackContentStepProp) {
   const feedbackTypeInfo = feedbackTypes[feedbackType];
+  const { register, handleSubmit } = useForm<FeedbackInput>();
+  const [feedBackData, setFeedBackData] = useState<FeedbackInput | null>(null);
+  const [screenshot, setScreenshot] = useState<string | null>(null);
+
+  /*
+  aui é o exemplo que vem na documentação, mas vou usar
+  usecallback abaixo
+  const submitFeedback: SubmitHandler<FeedbackInput> = (data) =>
+    console.log(data);
+  */
+
+  const sendFeedback = useCallback(
+    (data: FeedbackInput) => {
+      console.log(data);
+
+      console.log(screenshot);
+
+      setFeedBackData(data);
+
+      onFeedbackSent();
+    },
+    [feedBackData, screenshot]
+  );
 
   return (
     <>
@@ -36,11 +68,12 @@ export function FeedbackContentStep({
         <CloseButton />
       </header>
 
-      <form className="my-4 w-full">
+      <form className="my-4 w-full" onSubmit={handleSubmit(sendFeedback)}>
         <textarea
+          {...register("feedback")}
           className="min-w-[304px] 
           w-full 
-          h-min[112px] 
+          min-h-[112px]
           text-sm 
           placeholder-zinc-400 
           text-zinc-100 
@@ -58,6 +91,39 @@ export function FeedbackContentStep({
           "
           placeholder="Nos de mais detalhes do que esta ocorrendo..."
         />
+        <footer className="flex gap-2 mt-3">
+          <ScreenShotButton
+            screenshot={screenshot}
+            onScreensotTok={setScreenshot}
+          />
+
+          <button
+            type="submit"
+            className="
+            p-2 
+            bg-brand-500 
+            rounded-md 
+            border-transparent 
+            flex-1
+            flex
+            justify-center
+            items-center
+            text-sm
+            hover:bg-brand-300
+            focus:outline-none
+            focus:ring-2
+            focus:ring-offset-2
+            focus:ring-offset-zinc-900
+            focus:ring-brand-500
+            transition-colors
+            disabled:opacity-50
+            disabled:hover:bg-brand-500
+            
+           "
+          >
+            Enviar feedback
+          </button>
+        </footer>
       </form>
     </>
   );

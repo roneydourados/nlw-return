@@ -21,7 +21,11 @@ export function FeedbackContentStep({
   onFeedbackSent,
 }: FeedbackContentStepProp) {
   const feedbackTypeInfo = feedbackTypes[feedbackType];
-  const { register, handleSubmit } = useForm<FeedbackInput>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FeedbackInput>();
   const [feedBackData, setFeedBackData] = useState<FeedbackInput | null>(null);
   const [screenshot, setScreenshot] = useState<string | null>(null);
 
@@ -70,7 +74,7 @@ export function FeedbackContentStep({
 
       <form className="my-4 w-full" onSubmit={handleSubmit(sendFeedback)}>
         <textarea
-          {...register("feedback")}
+          {...register("feedback", { required: true })}
           className="min-w-[304px] 
           w-full 
           min-h-[112px]
@@ -91,6 +95,11 @@ export function FeedbackContentStep({
           "
           placeholder="Nos de mais detalhes do que esta ocorrendo..."
         />
+        <div className="max-w[100px]">
+          <span className="text-red-400">
+            {errors.feedback && "Informe comentário!"}
+          </span>
+        </div>
         <footer className="flex gap-2 mt-3">
           <ScreenShotButton
             screenshot={screenshot}
@@ -118,7 +127,6 @@ export function FeedbackContentStep({
             transition-colors
             disabled:opacity-50
             disabled:hover:bg-brand-500
-            
            "
           >
             Enviar feedback

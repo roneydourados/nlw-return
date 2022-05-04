@@ -77,6 +77,7 @@ export function WidgetForm() {
         <a
           className="underline underline-offset-2 ml-1"
           href="https://app.yenor-tec.com/"
+          target="_blank"
         >
           Yenor Tec
         </a>
